@@ -2,8 +2,8 @@ import streamlit as st
 import numpy as np
 import torch
 from torch import nn
-import cv2
 from io import BytesIO
+from PIL import Image
 
 device = "cpu"
 
@@ -74,10 +74,9 @@ model.to(device)
 # Define a function to preprocess the uploaded image
 def preprocess_image(image):
     # Resize the image to 250x250 pixels
-    image_array = np.array(image)
+    image = image.resize((224, 224))
 
-    # Resize the image to 250x250 pixels
-    image_array = cv2.resize(image_array, (224, 224))
+    image_array = np.array(image)
     
     # Normalize the image to the range [0, 1]
     image_array = image_array / 255.0
@@ -101,9 +100,10 @@ st.write("""
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
-    # Decode the bytes to an OpenCV image
-    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    file_bytes = uploaded_file.read()
+    
+    # Open the image using PIL
+    image = Image.open(uploaded_file)
     
     # Display the uploaded image
     st.image(image, channels="BGR", caption="Uploaded Image", use_column_width=True)
