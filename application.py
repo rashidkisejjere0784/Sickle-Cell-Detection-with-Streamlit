@@ -67,7 +67,6 @@ class DCNNSCD(nn.Module):
     
 model = DCNNSCD(input_channels=3, output_shape=1).to(device)
 
-# Load your trained model (replace 'path_to_your_model' with the actual path)
 model.load_state_dict(torch.load("model state dict.pt", map_location=torch.device('cpu')))
 model.to(device)
 
